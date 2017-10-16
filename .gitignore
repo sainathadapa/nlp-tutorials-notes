@@ -1,0 +1,7 @@
+*.zip
+*.gz
+.ipynb_checkpoints
+*.txt
+*.csv
+aclImdb/
+sent-class-cnn/
