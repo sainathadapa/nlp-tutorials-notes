@@ -14,6 +14,7 @@ x <- as.data.frame(x)
 
 
 # 1. Extracting nouns using output from PoS tagger
+# An easy way in order to find keywords is by looking at nouns. As each term has a Parts of Speech tag if you annotated text using the udpipe package, you can easily do this as follows.
 stats <- subset(x, upos %in% "NOUN")
 stats <- txt_freq(x = stats$lemma)
 library(lattice)
@@ -21,11 +22,7 @@ stats$key <- factor(stats$key, levels = rev(stats$key))
 barchart(key ~ freq, data = head(stats, 30), col = "cadetblue", main = "Most occurring nouns", xlab = "Freq")
 
 # 2. Collocation & co=occurrences
-# Although nouns are a great start, you are probably interested in multi-word expressions.
-# You can get multi-word expression by looking either at collocations (words following one another),
-# at word co-occurrences within each sentence or at word co-occurrences of words which are close in the
-# neighbourhood of one another. These approaches can be executed as follows using the udpipe R package.
-# If we combine this with selecting only the nouns and adjectives, this becomes already nice.
+# Although nouns are a great start, you are probably interested in multi-word expressions. You can get multi-word expression by looking either at collocations (words following one another), at word co-occurrences within each sentence or at word co-occurrences of words which are close in the neighbourhood of one another. These approaches can be executed as follows using the udpipe R package. If we combine this with selecting only the nouns and adjectives, this becomes already nice.
 
 ## Collocation (words following one another)
 stats <- keywords_collocation(x = x, 
@@ -57,12 +54,7 @@ ggraph(wordnetwork, layout = "fr") +
 
 
 # 3. Textrank (word network ordered by Google Pagerank)
-# Textrank is an algorithm implemented in the textrank R package.
-# The algorithm allows to summarise text and as well allows to extract keywords.
-# This is done by constructing a word network by looking if words are following one another.
-# On top of that network the 'Google Pagerank' algorithm is applied to extract relevant words
-# after which relevant words which are following one another are combined to get keywords.
-# In the below example, we are interested in finding keywords using that algorithm of either nouns or adjectives
+# Textrank is an algorithm implemented in the textrank R package. The algorithm allows to summarise text and as well allows to extract keywords. This is done by constructing a word network by looking if words are following one another. On top of that network the 'Google Pagerank' algorithm is applied to extract relevant words after which relevant words which are following one another are combined to get keywords. In the below example, we are interested in finding keywords using that algorithm of either nouns or adjectives
 # following one another. 
 stats <- textrank_keywords(x$lemma, 
                            relevant = x$upos %in% c("NOUN", "ADJ"), 
